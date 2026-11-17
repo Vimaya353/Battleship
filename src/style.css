@@ -1,0 +1,6 @@
+.boards { display: flex; gap: 40px; justify-content: center; }
+.board { display: grid; grid-template-columns: repeat(10, 36px); gap: 2px; }
+.cell { width: 36px; height: 36px; background: #cfe8ff; border: 1px solid #7aa; cursor: pointer; }
+.cell.ship { background: #556; }
+.cell.hit { background: #e33; }
+.cell.miss { background: #999; }
