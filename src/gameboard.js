@@ -1,9 +1,7 @@
 import Ship from './ship';
 
 export default class Gameboard {
-    constructor() {
-        this.ships = [];
-    }
+    
 
     placeShip(length, [row,col],direction = 'horizontal') {
         const coords = [];

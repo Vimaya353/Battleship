@@ -17,7 +17,7 @@ test ('hit() increases hits by 1', () => {
 });
 
 test('ship is not sunk when new', () => {
-    expect(new Ship(2),isSunk()).toBe(false);
+    expect(new Ship(2).isSunk()).toBe(false);
 });
 
 test ('ship is not sunk with fewer hits than length', () => {

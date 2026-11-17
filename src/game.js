@@ -6,17 +6,9 @@ export default class Game {
     this.computer = new Player('Computer', true);
     this.currentPlayer = this.human;
     this.winner = null;
-    this.setupDefaultShips();
+    this.human.gameboard.randomizeShips();
+    this.computer.gameboard.randomizeShips();
   }
-
-  constructor() {
-  this.human = new Player('You');
-  this.computer = new Player('Computer', true);
-  this.currentPlayer = this.human;
-  this.winner = null;
-  this.human.gameboard.randomizeShips();
-  this.computer.gameboard.randomizeShips();
-}
 
   playTurn(coord) {
     if (this.winner) return;
