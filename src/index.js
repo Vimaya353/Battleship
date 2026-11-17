@@ -33,4 +33,9 @@ document.getElementById('restart').addEventListener('click', () => {
   render();
 });
 
+document.getElementById('randomize').addEventListener('click', () => {
+  game.human.gameboard.randomizeShips();
+  render();
+});
+
 render();

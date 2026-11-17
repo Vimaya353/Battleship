@@ -20,3 +20,14 @@ test('computer never repeats a move', () => {
   }
   expect(enemy.gameboard.missedShots.length).toBe(100);
 });
+
+test('computer attacks next to a previous hit', () => {
+  const cpu = new Player('CPU', true);
+  const enemy = new Player('Human');
+  enemy.gameboard.placeShip(3, [5, 5], 'horizontal');
+  cpu.lastHit = [5, 5];
+  enemy.gameboard.receiveAttack([5, 5]);
+  const [r, c] = cpu.smartAttack(enemy.gameboard);
+  const distance = Math.abs(r - 5) + Math.abs(c - 5);
+  expect(distance).toBe(1);
+});
