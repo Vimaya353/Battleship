@@ -32,6 +32,10 @@ export default class Gameboard {
         return 'miss';
     }
 
+    allSunk() {
+        return this.ships.length > 0 && this.ships.every((s) => s.ship.isSunk());
+    }
+
     constructor() {
         this.ships = [];
         this.missedShots = [];

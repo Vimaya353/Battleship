@@ -47,3 +47,16 @@ test('cannot attack same square twice', () => {
   board.receiveAttack([5, 5]);
   expect(() => board.receiveAttack([5, 5])).toThrow();
 });
+
+test('allSunk is false when ships remain', () => {
+  const board = new Gameboard();
+  board.placeShip(1, [0, 0]);
+  expect(board.allSunk()).toBe(false);
+});
+
+test('allSunk is true when every ship is sunk', () => {
+  const board = new Gameboard();
+  board.placeShip(1, [0, 0]);
+  board.receiveAttack([0, 0]);
+  expect(board.allSunk()).toBe(true);
+});
