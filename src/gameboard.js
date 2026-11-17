@@ -1,70 +1,67 @@
 import Ship from './ship';
 
 export default class Gameboard {
-    
+  constructor() {
+    this.ships = [];
+    this.missedShots = [];
+    this.hitShots = [];
+  }
 
-    placeShip(length, [row,col],direction = 'horizontal') {
-        const coords = [];
-        for (let i = 0; i < length; i++) {
-            coords.push(direction === 'horizontal' ? [row, col + i] : [row + i, col]);
+  placeShip(length, [row, col], direction = 'horizontal') {
+    const coords = [];
+    for (let i = 0; i < length; i++) {
+      coords.push(direction === 'horizontal' ? [row, col + i] : [row + i, col]);
+    }
+
+    const inside = coords.every(([r, c]) => r >= 0 && r < 10 && c >= 0 && c < 10);
+    if (!inside) throw new Error('Ship is outside the board');
+
+    const taken = this.ships.some((s) =>
+      s.coords.some(([r, c]) => coords.some(([r2, c2]) => r === r2 && c === c2))
+    );
+    if (taken) throw new Error('Ships overlap');
+
+    this.ships.push({ ship: new Ship(length), coords });
+  }
+
+  receiveAttack([row, col]) {
+    const already = [...this.missedShots, ...this.hitShots].some(
+      ([r, c]) => r === row && c === col
+    );
+    if (already) throw new Error('Already attacked here');
+
+    const target = this.ships.find((s) =>
+      s.coords.some(([r, c]) => r === row && c === col)
+    );
+
+    if (target) {
+      target.ship.hit();
+      this.hitShots.push([row, col]);
+      return 'hit';
+    }
+    this.missedShots.push([row, col]);
+    return 'miss';
+  }
+
+  allSunk() {
+    return this.ships.length > 0 && this.ships.every((s) => s.ship.isSunk());
+  }
+
+  randomizeShips(lengths = [5, 4, 3, 3, 2]) {
+    this.ships = [];
+    lengths.forEach((len) => {
+      let placed = false;
+      while (!placed) {
+        const dir = Math.random() < 0.5 ? 'horizontal' : 'vertical';
+        const row = Math.floor(Math.random() * 10);
+        const col = Math.floor(Math.random() * 10);
+        try {
+          this.placeShip(len, [row, col], dir);
+          placed = true;
+        } catch (e) {
+          // spot didn't work, try again
         }
-        this.ships.push({ship: new Ship(length), coords });
-    }
-
-    receiveAttack([row, col]) {
-        const already = [...this.missedShots, ...this.hitShots].some(
-            ([r, c]) => r === row && c === col
-        );
-        if (already) throw new Error('Already attacked here');
-
-        const target = this.ships.find((s) =>
-            s.coords.some(([r, c]) => r === row && c === col)
-        );
-
-        if (target) {
-            target.ship.hit();
-            this.hitShots.push([row, col]);
-            return 'hit';
-        }
-        this.missedShots.push([row, col]);
-        return 'miss';
-    }
-
-    allSunk() {
-        return this.ships.length > 0 && this.ships.every((s) => s.ship.isSunk());
-    }
-
-    randomizeShips(lengths = [5, 4, 3, 3, 2]) {
-        this.ships = [];
-        lengths.forEach((len) => {
-            let placed = false;
-            while (!placed) {
-            const dir = Math.random() < 0.5 ? 'horizontal' : 'vertical';
-            const row = Math.floor(Math.random() * 10);
-            const col = Math.floor(Math.random() * 10);
-            try {
-                this.placeShip(len, [row, col], dir);
-                placed = true;
-            } catch (e) {
-                // spot didn't work, try again
-            }
-            }
-        });
-    }
-
-    constructor() {
-        this.ships = [];
-        this.missedShots = [];
-        this.hitShots = [];
-    }
-
+      }
+    });
+  }
 }
-
-const inside = coords.every(([r, c]) => r >= 0 && r < 10 && c >= 0 && c < 10);
-if (!inside) throw new Error('Ship is outside the board');
-
-const taken = this.ships.some((s) =>
-  s.coords.some(([r, c]) => coords.some(([r2, c2]) => r === r2 && c === c2))
-);
-if (taken) throw new Error('Ships overlap');
-
