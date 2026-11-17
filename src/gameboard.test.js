@@ -28,3 +28,22 @@ test('rejects overlapping ships', () => {
   board.placeShip(3, [0, 0], 'horizontal');
   expect(() => board.placeShip(2, [0, 1], 'vertical')).toThrow();
 });
+
+test('attack on a ship returns "hit" and damages it', () => {
+  const board = new Gameboard();
+  board.placeShip(2, [0, 0], 'horizontal');
+  expect(board.receiveAttack([0, 0])).toBe('hit');
+  expect(board.ships[0].ship.hits).toBe(1);
+});
+
+test('attack on empty water records a miss', () => {
+  const board = new Gameboard();
+  expect(board.receiveAttack([5, 5])).toBe('miss');
+  expect(board.missedShots).toEqual([[5, 5]]);
+});
+
+test('cannot attack same square twice', () => {
+  const board = new Gameboard();
+  board.receiveAttack([5, 5]);
+  expect(() => board.receiveAttack([5, 5])).toThrow();
+});
