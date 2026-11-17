@@ -36,6 +36,24 @@ export default class Gameboard {
         return this.ships.length > 0 && this.ships.every((s) => s.ship.isSunk());
     }
 
+    randomizeShips(lengths = [5, 4, 3, 3, 2]) {
+        this.ships = [];
+        lengths.forEach((len) => {
+            let placed = false;
+            while (!placed) {
+            const dir = Math.random() < 0.5 ? 'horizontal' : 'vertical';
+            const row = Math.floor(Math.random() * 10);
+            const col = Math.floor(Math.random() * 10);
+            try {
+                this.placeShip(len, [row, col], dir);
+                placed = true;
+            } catch (e) {
+                // spot didn't work, try again
+            }
+            }
+        });
+    }
+
     constructor() {
         this.ships = [];
         this.missedShots = [];

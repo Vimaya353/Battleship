@@ -60,3 +60,11 @@ test('allSunk is true when every ship is sunk', () => {
   board.receiveAttack([0, 0]);
   expect(board.allSunk()).toBe(true);
 });
+
+test('randomizeShips places 5 ships without overlap', () => {
+  const board = new Gameboard();
+  board.randomizeShips([5, 4, 3, 3, 2]);
+  expect(board.ships.length).toBe(5);
+  const all = board.ships.flatMap((s) => s.coords.map((c) => c.join(',')));
+  expect(new Set(all).size).toBe(17);
+});
